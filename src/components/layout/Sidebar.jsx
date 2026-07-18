@@ -9,18 +9,18 @@ const Sidebar = () => {
     <div className="h-full flex flex-col bg-gray-50">
 
       {/* Header */}
-      <div className="bg-white border-b px-6 py-5">
-        <h1 className="text-2xl font-bold text-gray-800">
+      <div className="bg-white border-b px-5 py-3">
+        <h1 className="text-xl font-bold text-gray-800">
           Survey Builder
         </h1>
 
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-500 mt-0.5">
           Configure your survey campaign
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="p-4">
+      <div className="px-4 pt-3 pb-2">
         <div className="flex bg-gray-200 rounded-lg p-1">
 
           <button

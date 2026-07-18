@@ -9,6 +9,7 @@ import {
 
 import Introduction from "./Introduction";
 import QuestionCard from "./QuestionCard";
+import ThankYouPage from "./ThankYouPage";
 
 const Content = () => {
   const dispatch = useDispatch();
@@ -78,6 +79,8 @@ const Content = () => {
           />
         ))}
       </div>
+
+      <ThankYouPage />
     </div>
   );
 };

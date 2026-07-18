@@ -1,3 +1,5 @@
+import LogicSection from "./LogicSection";
+
 const QuestionCard = ({
   question,
   index,
@@ -103,7 +105,7 @@ const QuestionCard = ({
                       e.target.value
                     )
                   }
-                  className="flex-1 border border-slate-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 min-w-0 border border-slate-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
                 />
 
                 <button
@@ -114,7 +116,7 @@ const QuestionCard = ({
                     )
                   }
                   disabled={question.options.length <= 2}
-                  className={`px-4 rounded-lg ${
+                  className={`shrink-0 px-4 rounded-lg ${
                     question.options.length <= 2
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : "bg-red-500 text-white hover:bg-red-600"
@@ -163,6 +165,8 @@ const QuestionCard = ({
               className="h-5 w-5 accent-blue-600 cursor-pointer"
             />
           </div>
+
+          <LogicSection question={question} />
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
