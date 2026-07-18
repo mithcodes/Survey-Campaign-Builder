@@ -123,7 +123,7 @@ src/
 Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/mithcodes/Survey-Campaign-Builder
 ```
 
 Move into the project
@@ -179,7 +179,7 @@ npm run build
 Live Demo:
 
 ```
-Add your deployment link here
+https://survey-campaign-builder-henna.vercel.app/
 ```
 
 ---
@@ -187,7 +187,7 @@ Add your deployment link here
 ## GitHub Repository
 
 ```
-Add your GitHub repository link here
+https://github.com/mithcodes/Survey-Campaign-Builder
 ```
 
 ---
