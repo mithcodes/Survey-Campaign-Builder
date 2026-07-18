@@ -161,10 +161,21 @@ const MobilePreview = () => {
     >
 
       {/* Screen */}
-      <div
-        style={cardStyle}
-        className="relative flex-1 min-h-0 overflow-y-auto p-4"
-      >
+      <div className="relative flex-1 min-h-0 overflow-hidden bg-white">
+
+        {/* Backdrop - dims the page behind the survey popup */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: appearance.backdropColor,
+            opacity: appearance.backdropOpacity,
+          }}
+        />
+
+        <div
+          style={cardStyle}
+          className="absolute inset-0 overflow-y-auto p-4"
+        >
 
             {crossButton.enabled && (
               <button
@@ -351,6 +362,7 @@ const MobilePreview = () => {
               </div>
             )}
 
+        </div>
       </div>
     </div>
   );
