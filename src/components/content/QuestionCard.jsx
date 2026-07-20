@@ -170,7 +170,7 @@ const QuestionCard = ({
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
-              Submit Button Text
+              Next Button Text
             </label>
 
             <input

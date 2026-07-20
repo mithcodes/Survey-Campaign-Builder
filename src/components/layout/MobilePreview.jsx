@@ -74,9 +74,31 @@ const MobilePreview = () => {
   const thankYou = useSelector((state) => state.style.thankYou);
 
   const [selectedByQuestion, setSelectedByQuestion] = useState({});
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [completed, setCompleted] = useState(false);
 
   const selectOption = (questionId, index) =>
     setSelectedByQuestion((prev) => ({ ...prev, [questionId]: index }));
+
+  const safeIndex = questions.length > 0 ? Math.min(currentIndex, questions.length - 1) : 0;
+  const currentQuestion = questions[safeIndex];
+  const isLastQuestion = safeIndex === questions.length - 1;
+
+  const handleNext = () => {
+    if (isLastQuestion) {
+      if (thankYouContent.enabled) setCompleted(true);
+    } else {
+      setCurrentIndex((i) => i + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (completed) {
+      setCompleted(false);
+    } else {
+      setCurrentIndex((i) => Math.max(i - 1, 0));
+    }
+  };
 
   const renderBullet = (isSelected) => {
     if (optionList.layout === "filled") return null;
@@ -219,86 +241,105 @@ const MobilePreview = () => {
               )}
             </div>
 
-            <div className="space-y-5">
-              {questions.map((question, index) => {
-                const selectedIndex = selectedByQuestion[question.id] ?? 0;
+            {!completed && currentQuestion && (
+              <div className="space-y-3">
+                <div className="border border-slate-200 rounded-xl p-4">
+                  <h2 style={textStyleToCss(questionTitle)}>
+                    {safeIndex + 1}. {currentQuestion.title || "Untitled Question"}
+                  </h2>
 
-                return (
-                  <div
-                    key={question.id}
-                    className="border border-slate-200 rounded-xl p-4"
-                  >
-                    <h2 style={textStyleToCss(questionTitle)}>
-                      {index + 1}. {question.title || "Untitled Question"}
-                    </h2>
+                  {currentQuestion.description && (
+                    <p style={textStyleToCss(subtitle)}>{currentQuestion.description}</p>
+                  )}
 
-                    {question.description && (
-                      <p style={textStyleToCss(subtitle)}>{question.description}</p>
-                    )}
+                  <div className="mt-3">
+                    {currentQuestion.options.map((option, optionIndex) => {
+                      const selectedIndex = selectedByQuestion[currentQuestion.id] ?? 0;
+                      const isSelected = optionIndex === selectedIndex;
+                      const activeStyle = isSelected
+                        ? selectedOption
+                        : unselectedOption;
 
-                    <div className="mt-3">
-                      {question.options.map((option, optionIndex) => {
-                        const isSelected = optionIndex === selectedIndex;
-                        const activeStyle = isSelected
-                          ? selectedOption
-                          : unselectedOption;
+                      return (
+                        <label
+                          key={optionIndex}
+                          style={{
+                            ...optionStyleToCss(activeStyle),
+                            minHeight: optionList.optionHeight,
+                            borderTopLeftRadius: optionList.cornerRadius.tl,
+                            borderTopRightRadius: optionList.cornerRadius.tr,
+                            borderBottomLeftRadius: optionList.cornerRadius.bl,
+                            borderBottomRightRadius: optionList.cornerRadius.br,
+                            gap: optionList.bulletSpacing,
+                            marginBottom: optionList.optionSpacing,
+                            justifyContent: justifyForAlign(activeStyle.align),
+                          }}
+                          className="flex items-center px-3 cursor-pointer transition"
+                        >
+                          <input
+                            type="radio"
+                            name={currentQuestion.id}
+                            className="sr-only"
+                            checked={isSelected}
+                            onChange={() => selectOption(currentQuestion.id, optionIndex)}
+                          />
 
-                        return (
-                          <label
-                            key={optionIndex}
-                            style={{
-                              ...optionStyleToCss(activeStyle),
-                              minHeight: optionList.optionHeight,
-                              borderTopLeftRadius: optionList.cornerRadius.tl,
-                              borderTopRightRadius: optionList.cornerRadius.tr,
-                              borderBottomLeftRadius: optionList.cornerRadius.bl,
-                              borderBottomRightRadius: optionList.cornerRadius.br,
-                              gap: optionList.bulletSpacing,
-                              marginBottom: optionList.optionSpacing,
-                              justifyContent: justifyForAlign(activeStyle.align),
-                            }}
-                            className="flex items-center px-3 cursor-pointer transition"
-                          >
-                            <input
-                              type="radio"
-                              name={question.id}
-                              className="sr-only"
-                              checked={isSelected}
-                              onChange={() => selectOption(question.id, optionIndex)}
-                            />
+                          {renderBullet(isSelected)}
 
-                            {renderBullet(isSelected)}
-
-                            <span className="truncate flex-1">
-                              {option || `Option ${optionIndex + 1}`}
-                            </span>
-                          </label>
-                        );
-                      })}
-                    </div>
-
-                    {question.allowComments && (
-                      <textarea
-                        placeholder="Write your comments..."
-                        style={optionStyleToCss(comment)}
-                        className="mt-3 w-full rounded-lg px-3 py-2 resize-none outline-none"
-                      />
-                    )}
-
-                    <div
-                      style={{ display: "flex", justifyContent: justifyForAlign(ctaButton.align) }}
-                    >
-                      <button style={buttonStyleToCss(ctaButton)}>
-                        {question.submitButtonText}
-                      </button>
-                    </div>
+                          <span className="truncate flex-1">
+                            {option || `Option ${optionIndex + 1}`}
+                          </span>
+                        </label>
+                      );
+                    })}
                   </div>
-                );
-              })}
-            </div>
+
+                  {currentQuestion.allowComments && (
+                    <textarea
+                      placeholder="Write your comments..."
+                      style={optionStyleToCss(comment)}
+                      className="mt-3 w-full rounded-lg px-3 py-2 resize-none outline-none"
+                    />
+                  )}
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      justifyContent: safeIndex > 0 ? "space-between" : justifyForAlign(ctaButton.align),
+                    }}
+                  >
+                    {safeIndex > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleBack}
+                        style={buttonStyleToCss(ctaButton)}
+                        className="cursor-pointer"
+                      >
+                        Back
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      style={buttonStyleToCss(ctaButton)}
+                      className="cursor-pointer"
+                    >
+                      {currentQuestion.submitButtonText}
+                    </button>
+                  </div>
+                </div>
+
+                <p className="text-center text-xs text-slate-400">
+                  Question {safeIndex + 1} of {questions.length}
+                </p>
+              </div>
+            )}
 
             {/* Thank You Page preview */}
-            {thankYouContent.enabled && (
+            {completed && thankYouContent.enabled && (
               <div className="mt-6 border-t border-dashed border-slate-200 pt-6">
                 {thankYouContent.mediaUrl ? (
                   thankYouContent.mediaType === "image" ? (
