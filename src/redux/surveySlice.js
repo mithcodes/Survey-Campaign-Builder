@@ -5,7 +5,7 @@ const initialState = {
   surveyTitle: "Customer Feedback Survey",
   surveyDescription:
     "Help us improve by answering a few quick questions.",
-  questions: [createQuestion()],
+  questions: [createQuestion(), createQuestion()],
 
   thankYou: {
     enabled: false,
